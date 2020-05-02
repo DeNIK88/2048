@@ -1,36 +1,14 @@
-import random
+from logics import *
 
-def pretty_print(mas):
-    print("-"*10)
-    for raw in mas:
-        print(*raw)
-    print("-"*10)
-
-def get_empty_list(mas):
-    number_from_index_list = []
-    for i in range(4):
-        for j in range(4):
-            if mas[i][j] == 0:
-                number_from_index_list.append(get_number_from_index(i, j))
-
-    return number_from_index_list
-
-
-def get_number_from_index(i, j):
-    return i * 4 + j + 1
-
-def get_index_from_number(num):
-    num -= 1
-    return num//4, num%4
-
-def insert_2_or_4(mas, x, y):
-    if random.random() <= 0.75:
-        mas[x][y] = 2
-    else:
-        mas[x][y] = 4
-    return mas
-
-
+# План работ
+# Положить в массив два значения
+# Начал цикл игры:
+#    ждать от пользователя команды
+#    когда получим команду обработать массив
+#    найти пустые клетки
+#    если есть пустые клетки случайно выбрать одну из них
+#    и положить туда 2 либо 4
+#    если пустых клеток нет и нельзя двигать массив, игра закончена
 
 mas = [
     [0, 0, 0, 0],
@@ -39,5 +17,17 @@ mas = [
     [0, 0, 0, 0]
 ]
 
-#pretty_print(mas)
-#get_empty_list(mas)
+mas[1][2] = 2
+mas[3][0] = 4
+
+print(get_empty_list(mas))
+
+while is_zero_in_mas(mas):
+    input()
+    empty = get_empty_list(mas)  # Получил список пустых элементов
+    random.shuffle(empty)  # Перемешал список
+    random_num = empty.pop()  # Удалил и взял последний элемент с конца списка.
+    i, j = get_index_from_number(random_num) # Получил индексы элемента из его номера
+    mas = insert_2_or_4(mas, i, j)
+    print(f'Мы заполнили элемент под номером {random_num}')
+    pretty_print(mas)

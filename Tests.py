@@ -1,5 +1,5 @@
 import unittest
-from Main import get_number_from_index, get_empty_list, get_index_from_number
+from logics import get_number_from_index, get_empty_list, get_index_from_number, is_zero_in_mas
 
 
 class Tests_2048(unittest.TestCase):
@@ -46,6 +46,41 @@ class Tests_2048(unittest.TestCase):
     def test_7(self):
         self.assertEqual(get_index_from_number(2), (0, 1))
 
+    def test_8(self):
+        mas = [
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1]
+        ]
+        self.assertEqual(is_zero_in_mas(mas), False)
+
+    def test_9(self):
+        mas = [
+            [1, 1, 1, 0],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1]
+        ]
+        self.assertEqual(is_zero_in_mas(mas), True)
+
+    def test_10(self):
+        mas = [
+            [0, 1, 0, 1],
+            [1, 1, 0, 1],
+            [1, 0, 1, 0],
+            [1, 1, 0, 1]
+        ]
+        self.assertEqual(is_zero_in_mas(mas), True)
+
+    def test_11(self):
+        mas = [
+            [1, 1, 1, 1],
+            [1, 1, 0, 1],
+            [1, 0, 1, 0],
+            [1, 1, 0, 1]
+        ]
+        self.assertEqual(is_zero_in_mas(mas), True)
 
 
 if __name__ == "main":
