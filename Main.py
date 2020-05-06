@@ -64,9 +64,12 @@ while is_zero_in_mas(mas):
             pygame.quit()
             sys.exit(0)
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                mas = move_left(mas)
+            elif event.key == pygame.K_RIGHT:
+                mas = move_right(mas)
             font = pygame.font.SysFont("stxingkai", 70)
             pygame.draw.rect(screen, WHITE_COLOR, TITLE_RECTANGLE)
-            pretty_print(mas)
             empty = get_empty_list(mas)  # Получил список пустых элементов
             random.shuffle(empty)  # Перемешал список
             random_num = empty.pop()  # Удалил и взял последний элемент с конца списка.
