@@ -1,5 +1,6 @@
 import unittest
-from logics import get_number_from_index, get_empty_list, get_index_from_number, is_zero_in_mas, move_left
+from logics import get_number_from_index, get_empty_list, get_index_from_number, is_zero_in_mas, move_left, move_up, \
+    move_down, can_movie
 
 
 class Tests_2048(unittest.TestCase):
@@ -95,7 +96,7 @@ class Tests_2048(unittest.TestCase):
             [0, 0, 0, 0],
             [16, 0, 0, 0]
         ]
-        self.assertEqual(move_left(mas), rez)
+        self.assertEqual(move_left(mas), (rez, 28))
 
     def test_13(self):
         mas = [
@@ -110,7 +111,67 @@ class Tests_2048(unittest.TestCase):
             [8, 4, 4, 0],
             [2, 4, 8, 0]
         ]
-        self.assertEqual(move_left(mas), rez)
+        self.assertEqual(move_left(mas), (rez, 4))
+
+    def test_14(self):
+        mas = [
+            [2, 0, 4, 4],
+            [2, 0, 2, 4],
+            [0, 2, 2, 4],
+            [0, 2, 4, 4]
+        ]
+
+        rez = [
+            [4, 4, 4, 8],
+            [0, 0, 4, 8],
+            [0, 0, 4, 0],
+            [0, 0, 0, 0]
+        ]
+        self.assertEqual(move_up(mas), (rez, 28))
+
+    def test_15(self):
+        mas = [
+            [2, 0, 4, 4],
+            [2, 0, 2, 4],
+            [0, 2, 2, 4],
+            [0, 2, 4, 4]
+        ]
+
+        rez = [
+            [0, 0, 0, 0],
+            [0, 0, 4, 0],
+            [0, 0, 4, 8],
+            [4, 4, 4, 8]
+        ]
+        self.assertEqual(move_down(mas), (rez, 28))
+
+    def test_16(self):
+        mas = [
+            [0, 0, 0, 0],
+            [0, 2, 0, 0],
+            [0, 2, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.assertEqual(can_movie(mas), True)
+
+    def test_17(self):
+        mas = [
+            [0, 0, 0, 0],
+            [0, 2, 2, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.assertEqual(can_movie(mas), True)
+
+
+    def test_18(self):
+        mas = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.assertEqual(can_movie(mas), False)
 
 
 if __name__ == "main":
