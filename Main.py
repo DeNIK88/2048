@@ -1,6 +1,23 @@
 from logics import *
 import pygame
 import sys
+from database import get_best, cur
+
+GAMERS_FROM_DATABASE = get_best()
+
+
+def draw_top_gamers():
+    font_top = pygame.font.SysFont("simsun", 30) # Шрифт счетчика
+    font_gamer = pygame.font.SysFont("simsun", 24) # Шрифт счетчика
+    text_head = font_top.render("Best tries: ", True, COLOR_SCORE)
+    screen.blit(text_head, (270, 5))
+    for index, gamer in enumerate(GAMERS_FROM_DATABASE):
+        # print(index, gamer)
+        name, score = gamer
+        # print(index+1, name, score)
+        s = f"{index+1}. {name} - {score}"
+        text_gamer = font_gamer.render(s, True, COLOR_SCORE)
+        screen.blit(text_gamer, (270, 30 + index*30))
 
 
 def draw_interface(score, delta=0):
@@ -15,11 +32,11 @@ def draw_interface(score, delta=0):
 
     font = pygame.font.SysFont("stxingkai", 70) # Шрифт цифр
 
-    if delta>0:
+    if delta > 0:
         text_delta = font_delta.render(f"+{delta}", True, COLOR_SCORE)  # Рисовка счетчика2
         screen.blit(text_delta, (175, 65))  # разместил значение счетчика2
-
     pretty_print(mas)
+    draw_top_gamers()
     for row in range(BLOCKS):
         for column in range(BLOCKS):
             value = mas[row][column]  # Вместе с отрисовкой квадратов узнаю значение по этому индексу
@@ -70,7 +87,6 @@ print(get_empty_list(mas))
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2048")
-
 draw_interface(score)
 pygame.display.update()
 

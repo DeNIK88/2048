@@ -7,32 +7,28 @@ cur = bd.cursor()
 добавление и удаление записей базы данных. Курсор базы данных, характерный для обхода, делает курсоры похожими на 
 концепцию итератора языка программирования. """
 
-cur.execute(
-    """
+
+def get_best():
+    cur.execute(
+        """
     create table if not exists RECORDS (
     name text,
-    score integer) 
-    """)
-
-"""
-create table if not exists RECORDS - создать табличку если еще не создана с именем РЕКОРДС
-name text - колонка найм, хранит текст
-score integer - колонка скоре, хранит целое число
-"""
-
-cur.execute(
-    """SELECT name, max(score) from RECORDS
+    score integer
+    )""")
+    # create table if not exists RECORDS - создать табличку если еще не создана с именем РЕКОРДС
+    # name text - колонка найм, хранит текст
+    # score integer - колонка скоре, хранит целое число
+    cur.execute(
+        """
+    SELECT name, max(score) from RECORDS
     GROUP by name
     ORDER by score DESC
     limit 3"""
-)
-"""
-SELECT name, max(score) from RECORDS - выбрать (столбцы) нейм, скоре из РЕКОРДС
-Группировать по нейм, объединяет одинаковые нейм в один
-сортировать по скоре деск(от большего к меньшему)
-показать первые три строки
-"""
+    )
+# SELECT name, max(score) from RECORDS - выбрать (столбцы) нейм, скоре из РЕКОРДС
+# Группировать по нейм, объединяет одинаковые нейм в один
+# сортировать по скоре деск(от большего к меньшему)
+# показать первые три строки
 
-result = cur.fetchall()
-cur.close()
-print(result)
+    return cur.fetchall()
+# Вернуть записи в курсоре
