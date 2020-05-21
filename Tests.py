@@ -174,6 +174,8 @@ class Tests_2048(unittest.TestCase):
         self.assertEqual(can_movie(mas), False)
 
 
+
+
 if __name__ == "main":
     unittest.main()
 

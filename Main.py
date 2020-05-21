@@ -1,10 +1,75 @@
 from logics import *
 import pygame
 import sys
-from database import get_best, cur
+from database import get_best, cur, insert_result
 
 GAMERS_FROM_DATABASE = get_best()
+USERNAME = None
 
+def draw_intro():
+    img = pygame.image.load("2048img.png")
+    font = pygame.font.SysFont("stxingkai", 70)
+    text_welcome = font.render("Welcome!", True, WHITE_COLOR)
+    name = "Введите имя"
+    is_find_name = False  # Флаг введённого имени.
+
+    while not is_find_name:     # Пока имя не найдено
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            elif event.type == pygame.KEYDOWN:  # Если тип события = нажатая клавиша
+                if event.unicode.isalpha():     # isalpha Вернёт True, если в строке хотя бы один символ и все символы
+                    # строки являются буквами, иначе — False.
+                    if name == "Введите имя":
+                        name = event.unicode    # Стирает "Введите имя" и пишет нажатый символ
+                    else:
+                        name += event.unicode       # конкатенирует name с нажатой клавишей
+                elif event.key == pygame.K_BACKSPACE:   # если стереть
+                    name = name[:-1]    # name = name без послледнего символа (срез)
+                elif event.key == pygame.K_RETURN:  # если энтер
+                    if len(name) > 2:
+                        global USERNAME
+                        USERNAME = name
+                        is_find_name = True
+                        break
+
+
+        screen.fill(BLACK_COLOR)    # Залить всё черным. Что бы текст из предыдущей строки ложился на чистый лист,
+        # а не друг на друга
+        text_name = font.render(name, True, WHITE_COLOR)
+        rect_name = text_name.get_rect()  # Взять координаты текста (прямоугольник)
+        rect_name.center = screen.get_rect().center  # Разместить текст по центру главного экрана
+        screen.blit(img, [10, 10])
+        screen.blit(text_welcome, (250, 80))
+        screen.blit(text_name, rect_name)
+        pygame.display.update()
+    screen.fill(BLACK_COLOR)
+
+def game_over():
+    img = pygame.image.load("2048img.png")
+    font = pygame.font.SysFont("stxingkai", 60)
+    font_record = pygame.font.SysFont("stxingkai", 50)
+
+    text_game_over = font.render("Game over!", True, WHITE_COLOR)
+    text_score = font_record.render(f"Вы набрали {score} очков", True, WHITE_COLOR)
+    best_score = GAMERS_FROM_DATABASE[0][1]     # Беру лучший результат из базы данных, только очки
+    if score > best_score:
+        text_record = font_record.render("Рекорд побит", True, WHITE_COLOR)
+    else:
+        text_record = font_record.render(f"Рекорд не побит: {best_score}", True, WHITE_COLOR)
+    insert_result(USERNAME, score)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+        screen.fill(BLACK_COLOR)
+        screen.blit(text_game_over, (250, 80))
+        screen.blit(text_score, (30, 250))
+        screen.blit(text_record, (30, 300))
+        screen.blit(img, [10, 10])
+        pygame.display.update()
 
 def draw_top_gamers():
     font_top = pygame.font.SysFont("simsun", 30) # Шрифт счетчика
@@ -63,10 +128,16 @@ score = 0
 
 COLORS = {
     0: (130, 130, 130),
-    2: (255, 255, 255),
-    4: (255, 255, 130),
-    8: (255, 255, 0),
-    16: (255, 130, 255)
+    2: (130, 255, 255),
+    4: (255, 130, 255),
+    8: (255, 255, 130),
+    16: (255, 255, 255),
+    32: (0, 255, 255),
+    64: (255, 0, 255),
+    128: (255, 255, 0),
+    256: (0, 130, 255),
+    512: (130, 0, 255),
+    1024: (130, 255, 0)
 }
 color = (0, 0, 0)
 BLACK_COLOR = (0, 0, 0)
@@ -87,6 +158,7 @@ print(get_empty_list(mas))
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2048")
+draw_intro()
 draw_interface(score)
 pygame.display.update()
 
@@ -108,11 +180,16 @@ while is_zero_in_mas(mas) or can_movie(mas):
             score += delta
             font = pygame.font.SysFont("stxingkai", 70)
             pygame.draw.rect(screen, WHITE_COLOR, TITLE_RECTANGLE)
-            empty = get_empty_list(mas)  # Получил список пустых элементов
-            random.shuffle(empty)  # Перемешал список
-            random_num = empty.pop()  # Удалил и взял последний элемент с конца списка.
-            i, j = get_index_from_number(random_num)  # Получил индексы элемента из его номера
-            mas = insert_2_or_4(mas, i, j)
-            print(f'Мы заполнили элемент под номером {random_num}')
+            if is_zero_in_mas(mas):
+                empty = get_empty_list(mas)  # Беру список пустых элементов
+                random.shuffle(empty)  # Перемешал перемешиваю его
+                random_num = empty.pop()  # Удалил и взял последний элемент с конца списка.
+                # Метод поп возвращает взятый элемент.
+                i, j = get_index_from_number(random_num)  # Получил индексы элемента из его номера
+                mas = insert_2_or_4(mas, i, j)  # Поставил на место взятого пустого элемента 2 или 4
+                print(f'Мы заполнили элемент под номером {random_num}')
             draw_interface(score, delta)
             pygame.display.update()
+    print(USERNAME)     # Проверка что имя введено то которое было введено пользователем
+
+game_over()

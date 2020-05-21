@@ -7,6 +7,11 @@ cur = bd.cursor()
 добавление и удаление записей базы данных. Курсор базы данных, характерный для обхода, делает курсоры похожими на 
 концепцию итератора языка программирования. """
 
+def insert_result(name, score):
+    cur.execute("""
+    insert into RECORDS values (?, ?)
+    """, (name, score))
+    bd.commit()
 
 def get_best():
     cur.execute(
@@ -32,3 +37,5 @@ def get_best():
 
     return cur.fetchall()
 # Вернуть записи в курсоре
+
+insert_result('qwerty', 999)
